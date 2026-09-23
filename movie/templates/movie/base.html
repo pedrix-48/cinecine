@@ -1,0 +1,159 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}CineCine &bull; Modern Movie Streaming{% endblock %}</title>
+    <meta name="description" content="{% block meta_description %}Explore trending blockbusters, ratings, official trailers, and streaming platforms on CineCine.{% endblock %}">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap 5.3.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- Custom Streaming Theme CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    {% block extra_style %}{% endblock %}
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <header>
+        <nav class="navbar navbar-expand-lg cine-navbar" aria-label="Main Navigation">
+            <div class="container-xl">
+                <!-- Brand -->
+                <a class="cine-brand navbar-brand" href="{% url 'home' %}">
+                    <span class="brand-badge"><i class="bi bi-film"></i></span>
+                    <span class="brand-text">CineCine</span>
+                </a>
+
+                <!-- Mobile Toggle -->
+                <button class="navbar-toggler border-0 text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <i class="bi bi-list fs-2"></i>
+                </button>
+
+                <!-- Navigation Links & Search -->
+                <div class="collapse navbar-collapse" id="navbarContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-3 gap-1">
+                        <li class="nav-item">
+                            <a class="cine-nav-link nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'home' %}">
+                                <i class="bi bi-house-door-fill me-1 opacity-75"></i> Home
+                            </a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="cine-nav-link nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-grid-fill me-1 opacity-75"></i> Genres
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-dark modal-content-cine border-secondary-subtle shadow-lg py-2">
+                                <li><a class="dropdown-item py-2" href="{% url 'home' %}"><i class="bi bi-collection-play me-2 text-danger"></i> All Genres</a></li>
+                                <li><hr class="dropdown-divider border-secondary-subtle"></li>
+                                <li><a class="dropdown-item py-2" href="{% url 'genre_movies' 'Sci-Fi' %}"><i class="bi bi-rocket-takeoff me-2 text-info"></i> Sci-Fi</a></li>
+                                <li><a class="dropdown-item py-2" href="{% url 'genre_movies' 'Action' %}"><i class="bi bi-lightning-charge me-2 text-warning"></i> Action</a></li>
+                                <li><a class="dropdown-item py-2" href="{% url 'genre_movies' 'Drama' %}"><i class="bi bi-mask me-2 text-primary"></i> Drama</a></li>
+                                <li><a class="dropdown-item py-2" href="{% url 'genre_movies' 'Thriller' %}"><i class="bi bi-eye me-2 text-danger"></i> Thriller</a></li>
+                                <li><a class="dropdown-item py-2" href="{% url 'genre_movies' 'Adventure' %}"><i class="bi bi-compass me-2 text-success"></i> Adventure</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                    <!-- Search Input Form -->
+                    <form method="get" action="{% url 'search_movies' %}" class="cine-nav-search me-lg-3 my-2 my-lg-0" role="search">
+                        <i class="bi bi-search search-icon"></i>
+                        <input type="text" name="q" placeholder="Search movies, directors..." value="{{ query|default:'' }}" aria-label="Search">
+                    </form>
+
+                    <!-- Right User/Admin Action -->
+                    <div class="d-flex align-items-center gap-2">
+                        <a href="{% url 'admin_login' %}" class="btn-cine-outline d-inline-flex align-items-center gap-2 py-1 px-3" style="font-size: 0.85rem;">
+                            <i class="bi bi-shield-lock-fill text-danger"></i>
+                            <span>Admin Studio</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-grow-1">
+        <div class="container-xl py-3">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <!-- Modern Streaming Footer -->
+    <footer class="cine-footer">
+        <div class="container-xl">
+            <div class="row g-4 mb-4">
+                <div class="col-lg-4 col-md-6">
+                    <a class="cine-brand mb-3 d-inline-flex" href="{% url 'home' %}">
+                        <span class="brand-badge"><i class="bi bi-film"></i></span>
+                        <span class="brand-text">CineCine</span>
+                    </a>
+                    <p class="text-secondary small pe-lg-4">
+                        Your ultimate gateway to cinema. Stream official trailers, discover cast details, compare streaming platforms, and stay updated with the highest-rated blockbusters.
+                    </p>
+                    <div class="d-flex gap-3 text-secondary fs-5 mt-3">
+                        <a href="#" class="text-secondary" aria-label="Twitter"><i class="bi bi-twitter-x"></i></a>
+                        <a href="#" class="text-secondary" aria-label="YouTube"><i class="bi bi-youtube"></i></a>
+                        <a href="#" class="text-secondary" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="text-secondary" aria-label="GitHub"><i class="bi bi-github"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-6">
+                    <h6 class="text-white fw-bold mb-3">Explore</h6>
+                    <ul class="list-unstyled small d-flex flex-column gap-2 mb-0">
+                        <li><a href="{% url 'home' %}" class="text-decoration-none">Home</a></li>
+                        <li><a href="{% url 'genre_movies' 'Action' %}" class="text-decoration-none">Action</a></li>
+                        <li><a href="{% url 'genre_movies' 'Sci-Fi' %}" class="text-decoration-none">Sci-Fi</a></li>
+                        <li><a href="{% url 'genre_movies' 'Drama' %}" class="text-decoration-none">Drama</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-6">
+                    <h6 class="text-white fw-bold mb-3">Management</h6>
+                    <ul class="list-unstyled small d-flex flex-column gap-2 mb-0">
+                        <li><a href="{% url 'admin_login' %}" class="text-decoration-none">Studio Portal</a></li>
+                        <li><a href="{% url 'admin_movies' %}" class="text-decoration-none">Manage Movies</a></li>
+                        <li><a href="{% url 'admin_genres' %}" class="text-decoration-none">Manage Genres</a></li>
+                        <li><a href="{% url 'admin_cast' %}" class="text-decoration-none">Manage Cast</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <h6 class="text-white fw-bold mb-3">Streaming Quality</h6>
+                    <p class="small text-secondary">
+                        Stream trailers in ultra-crisp 4K UHD and Dolby Atmos sound quality. Supports desktop, tablet, and mobile browsers smoothly.
+                    </p>
+                    <div class="d-flex gap-2">
+                        <span class="badge bg-dark border border-secondary text-secondary p-2">4K ULTRA HD</span>
+                        <span class="badge bg-dark border border-secondary text-secondary p-2">HDR10+</span>
+                        <span class="badge bg-dark border border-secondary text-secondary p-2">DOLBY ATMOS</span>
+                    </div>
+                </div>
+            </div>
+            <hr class="border-secondary-subtle opacity-25 my-4">
+            <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center gap-2 small text-secondary">
+                <p class="mb-0">&copy; 2026 CineCine Entertainment Platform. All rights reserved.</p>
+                <div class="d-flex gap-3">
+                    <a href="#" class="text-secondary text-decoration-none">Privacy Policy</a>
+                    <span>&bull;</span>
+                    <a href="#" class="text-secondary text-decoration-none">Terms of Service</a>
+                    <span>&bull;</span>
+                    <a href="#" class="text-secondary text-decoration-none">Cookies</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+    {% block extra_script %}{% endblock %}
+</body>
+</html>

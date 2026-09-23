@@ -1,0 +1,102 @@
+{% extends 'movie/admin/admin_base.html' %}
+{% block title %}Cast Management &bull; CineCine Studio{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+    <div>
+        <h1 class="h3 fw-bold text-white mb-1">Cast & Crew Management</h1>
+        <p class="text-secondary small mb-0">Assign actors and characters to movies in the catalog.</p>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- Add Cast Member Card -->
+    <div class="col-lg-4">
+        <div class="glass-box p-4">
+            <h5 class="fw-bold text-white mb-3">
+                <i class="bi bi-person-plus text-danger me-2"></i> Add Cast Member
+            </h5>
+            <form method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="movie" class="form-label-cine">Select Movie <span class="text-danger">*</span></label>
+                    <select id="movie" name="movie" class="form-select-cine" required>
+                        <option value="">Choose a movie...</option>
+                        {% for movie in movies %}
+                        <option value="{{ movie.id }}">{{ movie.title }} ({{ movie.release_year|default:'-' }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="actor_name" class="form-label-cine">Actor / Actress Name <span class="text-danger">*</span></label>
+                    <input type="text" id="actor_name" name="actor_name" class="form-control-cine" placeholder="e.g. Cillian Murphy" required>
+                </div>
+                <div class="mb-3">
+                    <label for="character_name" class="form-label-cine">Character Name</label>
+                    <input type="text" id="character_name" name="character_name" class="form-control-cine" placeholder="e.g. J. Robert Oppenheimer">
+                </div>
+                <div class="mb-3">
+                    <label for="cast_order" class="form-label-cine">Billing / Display Order</label>
+                    <input type="number" id="cast_order" name="cast_order" class="form-control-cine" value="1" min="0">
+                </div>
+                <button type="submit" class="btn-cine-primary w-100 justify-content-center">
+                    <i class="bi bi-plus-circle"></i> Add to Cast
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Cast Table -->
+    <div class="col-lg-8">
+        <div class="admin-table-container">
+            <div class="p-3 px-4 border-bottom border-secondary-subtle d-flex justify-content-between align-items-center">
+                <span class="text-secondary small text-uppercase fw-bold">
+                    <i class="bi bi-people text-warning me-1"></i> Cast Members ({{ casts|length }})
+                </span>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table admin-table mb-0">
+                    <thead>
+                        <tr>
+                            <th>Movie</th>
+                            <th>Actor / Actress</th>
+                            <th>Character Role</th>
+                            <th class="text-center">Order</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for c in casts %}
+                        <tr>
+                            <td>
+                                <span class="fw-bold text-white">{{ c.movie.title }}</span>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="cast-avatar" style="width: 32px; height: 32px; font-size: 0.8rem;">
+                                        {{ c.actor_name|make_list|first|upper }}
+                                    </div>
+                                    <span class="text-light">{{ c.actor_name }}</span>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="text-secondary">{{ c.character_name|default:'-' }}</span>
+                            </td>
+                            <td class="text-center">
+                                <span class="badge bg-dark border border-secondary text-secondary">{{ c.cast_order }}</span>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="text-center py-4 text-secondary">
+                                No cast members found. Add actors using the form on the left.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

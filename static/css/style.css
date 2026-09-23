@@ -1,0 +1,1073 @@
+/* CineCine - Modern Movie Streaming Design System */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  --font-main: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  
+  /* Color Palette */
+  --bg-body: #090b10;
+  --bg-surface: #10141e;
+  --bg-surface-elevated: #161c2a;
+  --bg-card: #131926;
+  --bg-card-hover: #192132;
+  --bg-glass: rgba(16, 20, 30, 0.75);
+  --bg-glass-card: rgba(22, 28, 42, 0.65);
+  
+  /* Brand Accents */
+  --accent-primary: #e50914;
+  --accent-primary-hover: #f40612;
+  --accent-primary-rgb: 229, 9, 20;
+  --accent-gold: #ffb703;
+  --accent-cyan: #00d2ff;
+  --accent-purple: #7928ca;
+
+  /* Text Colors */
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --text-inverse: #090b10;
+
+  /* Borders & Shadows */
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-glass: rgba(255, 255, 255, 0.12);
+  --border-accent: rgba(229, 9, 20, 0.45);
+  --shadow-card: 0 10px 30px -10px rgba(0, 0, 0, 0.7);
+  --shadow-glow: 0 0 30px rgba(229, 9, 20, 0.28);
+  --shadow-gold: 0 0 20px rgba(255, 183, 3, 0.25);
+  
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+  
+  --transition-fast: 0.18s ease;
+  --transition-normal: 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-slow: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ==========================================================================
+   Base & Resets
+   ========================================================================== */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-main);
+  background-color: var(--bg-body);
+  color: var(--text-primary);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+/* Sleek Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-body);
+}
+::-webkit-scrollbar-thumb {
+  background: #252e42;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-primary);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+/* ==========================================================================
+   Header & Navbar (Glassmorphic Streaming Bar)
+   ========================================================================== */
+.cine-navbar {
+  background: rgba(9, 11, 16, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 0.85rem 0;
+  position: sticky;
+  top: 0;
+  z-index: 1040;
+  transition: background-color var(--transition-normal);
+}
+
+.cine-brand {
+  font-weight: 800;
+  font-size: 1.55rem;
+  letter-spacing: -0.03em;
+  color: var(--text-primary);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.cine-brand .brand-badge {
+  background: linear-gradient(135deg, var(--accent-primary) 0%, #b8000b 100%);
+  color: #fff;
+  font-size: 0.95rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--radius-sm);
+  box-shadow: 0 0 15px rgba(var(--accent-primary-rgb), 0.4);
+}
+
+.cine-brand span.brand-text {
+  background: linear-gradient(90deg, #ffffff 40%, #e2e8f0 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.cine-nav-link {
+  color: var(--text-secondary);
+  font-weight: 500;
+  font-size: 0.95rem;
+  padding: 0.45rem 0.85rem !important;
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+}
+
+.cine-nav-link:hover,
+.cine-nav-link.active {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.cine-nav-search {
+  position: relative;
+  min-width: 240px;
+}
+
+.cine-nav-search input {
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  border-radius: var(--radius-full);
+  padding: 0.45rem 1rem 0.45rem 2.4rem;
+  font-size: 0.88rem;
+  transition: all var(--transition-normal);
+  width: 100%;
+}
+
+.cine-nav-search input:focus {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px rgba(var(--accent-primary-rgb), 0.2);
+  outline: none;
+  color: var(--text-primary);
+}
+
+.cine-nav-search .search-icon {
+  position: absolute;
+  left: 0.85rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  pointer-events: none;
+  font-size: 0.9rem;
+}
+
+.cine-nav-search input::placeholder {
+  color: var(--text-muted);
+}
+
+/* ==========================================================================
+   Hero Streaming Billboard
+   ========================================================================== */
+.hero-billboard {
+  position: relative;
+  min-height: 520px;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  margin-top: 1.25rem;
+  margin-bottom: 2.5rem;
+  background-color: var(--bg-surface);
+  background-size: cover;
+  background-position: center top;
+  display: flex;
+  align-items: flex-end;
+  box-shadow: var(--shadow-card);
+  border: 1px solid var(--border-subtle);
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    0deg,
+    var(--bg-body) 0%,
+    rgba(9, 11, 16, 0.82) 45%,
+    rgba(9, 11, 16, 0.35) 80%,
+    rgba(9, 11, 16, 0.6) 100%
+  ),
+  linear-gradient(90deg, rgba(9, 11, 16, 0.95) 0%, rgba(9, 11, 16, 0.5) 60%, transparent 100%);
+  z-index: 1;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  padding: 3rem 2.5rem;
+  max-width: 720px;
+}
+
+.hero-badge-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(229, 9, 20, 0.18);
+  color: #ff4d58;
+  border: 1px solid rgba(229, 9, 20, 0.35);
+  padding: 0.3rem 0.75rem;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.85rem;
+}
+
+.hero-title {
+  font-size: clamp(2rem, 4.5vw, 3.4rem);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  margin-bottom: 0.85rem;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
+}
+
+.hero-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  margin-bottom: 1.15rem;
+}
+
+.hero-meta .rating-chip {
+  background: rgba(255, 183, 3, 0.15);
+  color: var(--accent-gold);
+  border: 1px solid rgba(255, 183, 3, 0.35);
+  font-weight: 700;
+  padding: 0.2rem 0.55rem;
+  border-radius: var(--radius-sm);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.hero-overview {
+  color: #cbd5e1;
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 1.65rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
+}
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  flex-wrap: wrap;
+}
+
+/* ==========================================================================
+   Buttons & Interactive Elements
+   ========================================================================== */
+.btn-cine-primary {
+  background: var(--accent-primary);
+  color: #ffffff !important;
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 0.7rem 1.6rem;
+  border-radius: var(--radius-full);
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 4px 18px rgba(var(--accent-primary-rgb), 0.45);
+  transition: all var(--transition-normal);
+}
+
+.btn-cine-primary:hover {
+  background: var(--accent-primary-hover);
+  color: #ffffff !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(var(--accent-primary-rgb), 0.6);
+}
+
+.btn-cine-glass {
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(10px);
+  color: #ffffff !important;
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 0.7rem 1.5rem;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-glass);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all var(--transition-normal);
+}
+
+.btn-cine-glass:hover {
+  background: rgba(255, 255, 255, 0.22);
+  color: #ffffff !important;
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.btn-cine-outline {
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  padding: 0.5rem 1.25rem;
+  font-weight: 500;
+  font-size: 0.9rem;
+  transition: all var(--transition-fast);
+}
+
+.btn-cine-outline:hover {
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
+  background: rgba(var(--accent-primary-rgb), 0.08);
+}
+
+/* ==========================================================================
+   Genre Filter Pill Chips Bar
+   ========================================================================== */
+.genre-pills-scroll {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  overflow-x: auto;
+  padding: 0.5rem 0.2rem 1.25rem;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.genre-pills-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.genre-pill {
+  white-space: nowrap;
+  padding: 0.45rem 1.15rem;
+  border-radius: var(--radius-full);
+  font-size: 0.88rem;
+  font-weight: 600;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  transition: all var(--transition-fast);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.genre-pill:hover {
+  background: var(--bg-card-hover);
+  color: var(--text-primary);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+.genre-pill.active {
+  background: var(--accent-primary);
+  color: #fff;
+  border-color: var(--accent-primary);
+  box-shadow: 0 4px 15px rgba(var(--accent-primary-rgb), 0.35);
+}
+
+/* ==========================================================================
+   Section Headers
+   ========================================================================== */
+.cine-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.cine-section-title {
+  font-size: 1.45rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0;
+}
+
+.cine-section-title::before {
+  content: '';
+  display: inline-block;
+  width: 4px;
+  height: 1.35rem;
+  background: var(--accent-primary);
+  border-radius: 2px;
+}
+
+/* ==========================================================================
+   Movie Card Component (Modern Streaming Grid)
+   ========================================================================== */
+.movie-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+@media (max-width: 576px) {
+  .movie-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.85rem;
+  }
+}
+
+.movie-card {
+  position: relative;
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+  transition: all var(--transition-normal);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.movie-card:hover {
+  transform: translateY(-7px) scale(1.02);
+  border-color: rgba(255, 255, 255, 0.25);
+  box-shadow: var(--shadow-card), 0 0 25px rgba(0, 0, 0, 0.5);
+  z-index: 5;
+}
+
+.movie-card .poster-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  background: #171d2b;
+  overflow: hidden;
+}
+
+.movie-card .poster-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition-slow);
+}
+
+.movie-card:hover .poster-img {
+  transform: scale(1.08);
+}
+
+/* Graceful Fallback Poster */
+.movie-card .poster-fallback {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #161c2a 0%, #0b0e14 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.movie-card .poster-fallback i {
+  font-size: 2.8rem;
+  color: rgba(229, 9, 20, 0.6);
+  margin-bottom: 0.6rem;
+}
+
+.movie-card .poster-fallback span {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+/* Card Badges */
+.movie-card .badge-rating {
+  position: absolute;
+  top: 0.65rem;
+  right: 0.65rem;
+  background: rgba(11, 14, 20, 0.85);
+  backdrop-filter: blur(8px);
+  color: var(--accent-gold);
+  border: 1px solid rgba(255, 183, 3, 0.3);
+  padding: 0.2rem 0.5rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  z-index: 2;
+}
+
+.movie-card .badge-quality {
+  position: absolute;
+  top: 0.65rem;
+  left: 0.65rem;
+  background: rgba(11, 14, 20, 0.75);
+  backdrop-filter: blur(8px);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  z-index: 2;
+}
+
+/* Hover Quick Actions Overlay */
+.movie-card .card-hover-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(0deg, rgba(9, 11, 16, 0.95) 0%, rgba(9, 11, 16, 0.4) 60%, transparent 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+  z-index: 3;
+}
+
+.movie-card:hover .card-hover-overlay {
+  opacity: 1;
+}
+
+.card-play-btn {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--accent-primary);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  box-shadow: 0 0 25px rgba(var(--accent-primary-rgb), 0.6);
+  transform: scale(0.85);
+  transition: all var(--transition-normal);
+}
+
+.movie-card:hover .card-play-btn {
+  transform: scale(1);
+}
+
+.card-play-btn:hover {
+  background: #ff1f2d;
+  transform: scale(1.1);
+  color: #fff;
+}
+
+/* Card Content / Details */
+.movie-card .card-info {
+  padding: 0.9rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  justify-content: space-between;
+  background: var(--bg-card);
+}
+
+.movie-card .card-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 0.35rem;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color var(--transition-fast);
+}
+
+.movie-card:hover .card-title {
+  color: #ff4d58;
+}
+
+.movie-card .card-meta {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.movie-card .card-genres {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin-top: 0.45rem;
+}
+
+.genre-tag-sm {
+  font-size: 0.68rem;
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-muted);
+}
+
+/* ==========================================================================
+   Movie Detail Page Styling
+   ========================================================================== */
+.detail-hero-backdrop {
+  position: relative;
+  min-height: 480px;
+  background-size: cover;
+  background-position: center;
+  margin: -1.5rem -1rem 2rem;
+  padding: 3rem 1.5rem;
+  display: flex;
+  align-items: flex-end;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.detail-hero-backdrop::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 75% 25%, rgba(229, 9, 20, 0.15), transparent 50%),
+              linear-gradient(0deg, var(--bg-body) 0%, rgba(9, 11, 16, 0.85) 60%, rgba(9, 11, 16, 0.4) 100%);
+}
+
+.detail-container {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 1240px;
+  margin: 0 auto;
+}
+
+.detail-poster-card {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8), 0 0 35px rgba(229, 9, 20, 0.25);
+  border: 1px solid var(--border-glass);
+  background: var(--bg-surface);
+}
+
+.detail-poster-img {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+  display: block;
+}
+
+.detail-meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+.glass-box {
+  background: var(--bg-glass-card);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.trailer-wrapper {
+  position: relative;
+  padding-bottom: 56.25%;
+  height: 0;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+  background: #000;
+}
+
+.trailer-wrapper iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+/* Streaming Platforms (Where to Watch) */
+.stream-platform-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border-glass);
+  padding: 0.65rem 1.15rem;
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 0.92rem;
+  transition: all var(--transition-fast);
+}
+
+.stream-platform-btn:hover {
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: translateY(-2px);
+}
+
+/* Cast Cards */
+.cast-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1rem;
+}
+
+.cast-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  transition: all var(--transition-fast);
+}
+
+.cast-card:hover {
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
+}
+
+.cast-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-primary);
+  font-weight: 700;
+  font-size: 1.1rem;
+  border: 1px solid var(--border-subtle);
+}
+
+/* Review Cards */
+.review-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.review-card .review-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.6rem;
+}
+
+/* ==========================================================================
+   Admin Studio Dashboard
+   ========================================================================== */
+.admin-layout {
+  display: flex;
+  min-height: calc(100vh - 65px);
+}
+
+.admin-sidebar {
+  width: 250px;
+  background: var(--bg-surface);
+  border-right: 1px solid var(--border-subtle);
+  padding: 1.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.admin-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  color: var(--text-secondary);
+  border-radius: var(--radius-md);
+  font-weight: 500;
+  font-size: 0.93rem;
+  transition: all var(--transition-fast);
+}
+
+.admin-nav-link:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+}
+
+.admin-nav-link.active {
+  background: rgba(var(--accent-primary-rgb), 0.15);
+  color: #ff4d58;
+  border: 1px solid rgba(var(--accent-primary-rgb), 0.3);
+  font-weight: 600;
+}
+
+.admin-content {
+  flex: 1;
+  padding: 2.2rem;
+  background: var(--bg-body);
+}
+
+.admin-stat-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+  transition: transform var(--transition-fast);
+}
+
+.admin-stat-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.admin-stat-card .stat-icon {
+  width: 54px;
+  height: 54px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+}
+
+.admin-table-container {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+}
+
+.admin-table {
+  width: 100%;
+  color: var(--text-primary);
+  margin-bottom: 0;
+}
+
+.admin-table th {
+  background: #141b29;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.admin-table td {
+  padding: 1rem 1.25rem;
+  vertical-align: middle;
+  border-bottom: 1px solid var(--border-subtle);
+  font-size: 0.92rem;
+}
+
+.admin-table tr:hover td {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+/* Modern Form Controls */
+.form-control-cine,
+.form-select-cine {
+  background: #0f141f;
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  border-radius: var(--radius-md);
+  padding: 0.7rem 1rem;
+  font-size: 0.95rem;
+  transition: all var(--transition-fast);
+  width: 100%;
+}
+
+.form-control-cine:focus,
+.form-select-cine:focus {
+  background: #131926;
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px rgba(var(--accent-primary-rgb), 0.25);
+  color: var(--text-primary);
+  outline: none;
+}
+
+.form-label-cine {
+  font-weight: 600;
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.4rem;
+  display: block;
+}
+
+/* ==========================================================================
+   Footer
+   ========================================================================== */
+.cine-footer {
+  background: #07090d;
+  border-top: 1px solid var(--border-subtle);
+  padding: 3rem 0 2rem;
+  margin-top: auto;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.cine-footer a {
+  color: var(--text-secondary);
+}
+
+.cine-footer a:hover {
+  color: var(--accent-primary);
+}
+
+/* Modals */
+.modal-content-cine {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+  color: var(--text-primary);
+}
+
+.modal-header-cine {
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 1.25rem 1.5rem;
+}
+
+.modal-header-cine .btn-close {
+  filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+/* ==========================================================================
+   Mobile Phone Responsiveness (Phones & Small Devices <= 768px)
+   ========================================================================== */
+@media (max-width: 767.98px) {
+  /* Admin Layout on Phone */
+  .admin-layout {
+    flex-direction: column;
+    min-height: auto;
+    width: 100%;
+  }
+
+  .admin-content {
+    padding: 1rem 0.85rem !important;
+    width: 100% !important;
+    max-width: 100vw !important;
+    overflow-x: hidden;
+  }
+
+  /* Admin Header & Brand */
+  .cine-navbar {
+    padding: 0.65rem 0;
+  }
+
+  .cine-brand {
+    font-size: 1.25rem;
+  }
+
+  .cine-brand .brand-badge {
+    padding: 0.2rem 0.45rem;
+    font-size: 0.85rem;
+  }
+
+  /* Admin KPI Cards */
+  .admin-stat-card {
+    padding: 1rem 1.15rem;
+    border-radius: var(--radius-md);
+  }
+
+  .admin-stat-card h2 {
+    font-size: 1.85rem !important;
+  }
+
+  .admin-stat-card .stat-icon {
+    width: 44px;
+    height: 44px;
+    font-size: 1.25rem;
+  }
+
+  /* Admin Tables on Phone */
+  .admin-table-container {
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+  }
+
+  .admin-table-container .p-3 {
+    padding: 0.85rem 1rem !important;
+  }
+
+  .admin-table th {
+    padding: 0.65rem 0.75rem;
+    font-size: 0.72rem;
+    white-space: nowrap;
+  }
+
+  .admin-table td {
+    padding: 0.75rem;
+    font-size: 0.84rem;
+  }
+
+  .table-responsive {
+    border: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Glass Box on Phone */
+  .glass-box {
+    padding: 1.15rem 1rem !important;
+    border-radius: var(--radius-md);
+  }
+
+  /* Buttons & Touch Targets */
+  .btn-cine-primary,
+  .btn-cine-glass,
+  .btn-cine-outline {
+    padding: 0.55rem 1.1rem;
+    font-size: 0.88rem;
+  }
+
+  .form-control-cine,
+  .form-select-cine {
+    padding: 0.6rem 0.85rem;
+    font-size: 0.9rem;
+  }
+
+  /* Offcanvas Menu */
+  .offcanvas.modal-content-cine {
+    background: #0f141f !important;
+    border-right: 1px solid var(--border-glass);
+  }
+}
+

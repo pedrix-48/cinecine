@@ -1,0 +1,116 @@
+{% extends 'movie/base.html' %}
+{% block title %}{% if query %}Results for "{{ query }}"{% else %}Search Movies{% endif %} &bull; CineCine{% endblock %}
+
+{% block content %}
+<!-- Search Hero Input -->
+<div class="glass-box p-4 p-md-5 mb-4 text-center">
+    <h2 class="text-white fw-bold mb-2">
+        <i class="bi bi-search text-danger me-2"></i> Find Your Next Movie
+    </h2>
+    <p class="text-secondary mb-4">Search by movie title, storyline keywords, or director name</p>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-7 col-md-9">
+            <form method="get" action="{% url 'search_movies' %}">
+                <div class="input-group input-group-lg shadow-sm">
+                    <span class="input-group-text bg-dark border-secondary text-secondary">
+                        <i class="bi bi-search"></i>
+                    </span>
+                    <input type="text" name="q" class="form-control bg-dark border-secondary text-white" placeholder="e.g. Inception, Christopher Nolan, Sci-Fi..." value="{{ query|default:'' }}" autofocus>
+                    <button class="btn btn-danger px-4" type="submit">
+                        Search
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Results Header -->
+{% if query %}
+<div class="cine-section-header">
+    <h3 class="cine-section-title">
+        <span>Results for "{{ query }}"</span>
+    </h3>
+    <span class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill px-3 py-2">
+        {{ movies|length }} {% if movies|length == 1 %}Match{% else %}Matches{% endif %}
+    </span>
+</div>
+{% else %}
+<div class="cine-section-header">
+    <h3 class="cine-section-title">
+        <span>All Available Titles</span>
+    </h3>
+    <span class="badge bg-dark border border-secondary text-secondary rounded-pill px-3 py-2">
+        {{ movies|length }} Titles
+    </span>
+</div>
+{% endif %}
+
+<!-- Movies Grid -->
+<div class="movie-grid">
+    {% for movie in movies %}
+    <div class="movie-card">
+        <div class="poster-wrapper">
+            {% if movie.poster_url %}
+            <img src="{{ movie.poster_url }}" alt="{{ movie.title }}" class="poster-img" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="poster-fallback" style="display: none;">
+                <i class="bi bi-film"></i>
+                <span>{{ movie.title }}</span>
+            </div>
+            {% else %}
+            <div class="poster-fallback">
+                <i class="bi bi-film"></i>
+                <span>{{ movie.title }}</span>
+            </div>
+            {% endif %}
+
+            <span class="badge-quality">4K</span>
+            {% if movie.rating %}
+            <span class="badge-rating">
+                <i class="bi bi-star-fill"></i> {{ movie.rating }}
+            </span>
+            {% endif %}
+
+            <a href="{% url 'movie_detail' movie.id %}" class="card-hover-overlay text-decoration-none">
+                <div class="card-play-btn">
+                    <i class="bi bi-play-fill"></i>
+                </div>
+            </a>
+        </div>
+
+        <div class="card-info">
+            <a href="{% url 'movie_detail' movie.id %}" class="card-title text-decoration-none" title="{{ movie.title }}">
+                {{ movie.title }}
+            </a>
+            
+            <div class="card-meta">
+                <span>{{ movie.release_year|default:'N/A' }}</span>
+                <span>&bull;</span>
+                <span>{{ movie.runtime_minutes|default:'-' }} min</span>
+                {% if movie.director %}
+                <span class="d-none d-sm-inline">&bull; {{ movie.director|truncatechars:15 }}</span>
+                {% endif %}
+            </div>
+
+            {% if movie.genres.all %}
+            <div class="card-genres">
+                {% for genre in movie.genres.all|slice:":2" %}
+                <span class="genre-tag-sm">{{ genre.name }}</span>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12 py-5 text-center">
+        <div class="glass-box d-inline-block p-5">
+            <i class="bi bi-search fs-1 text-danger mb-3 d-block"></i>
+            <h4 class="text-white">No Movies Found Matching "{{ query }}"</h4>
+            <p class="text-secondary mb-4">Try checking for typos or searching for a broader term like director or genre.</p>
+            <a href="{% url 'home' %}" class="btn-cine-primary">Return to Catalog</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

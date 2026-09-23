@@ -1,0 +1,98 @@
+{% extends 'movie/base.html' %}
+{% block title %}{{ genre.name }} Movies &bull; CineCine Streaming{% endblock %}
+
+{% block content %}
+<!-- Breadcrumb -->
+<div class="mb-3">
+    <a href="{% url 'home' %}" class="btn-cine-outline py-1 px-3 d-inline-flex align-items-center gap-2 small">
+        <i class="bi bi-arrow-left"></i>
+        <span>Back to All Titles</span>
+    </a>
+</div>
+
+<!-- Genre Header Banner -->
+<div class="glass-box p-4 mb-4 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+    <div class="d-flex align-items-center gap-3">
+        <div class="card-play-btn" style="width: 58px; height: 58px; font-size: 1.6rem; transform: none;">
+            <i class="bi bi-tag-fill"></i>
+        </div>
+        <div>
+            <span class="text-secondary small text-uppercase fw-bold letter-spacing-1">Genre Category</span>
+            <h1 class="display-6 fw-bold text-white mb-0">{{ genre.name }} Movies</h1>
+        </div>
+    </div>
+    <div>
+        <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-3 py-2 fs-6 rounded-pill">
+            {{ movies|length }} Titles
+        </span>
+    </div>
+</div>
+
+<!-- Movies Grid -->
+<div class="movie-grid">
+    {% for movie in movies %}
+    <div class="movie-card">
+        <div class="poster-wrapper">
+            {% if movie.poster_url %}
+            <img src="{{ movie.poster_url }}" alt="{{ movie.title }}" class="poster-img" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="poster-fallback" style="display: none;">
+                <i class="bi bi-film"></i>
+                <span>{{ movie.title }}</span>
+            </div>
+            {% else %}
+            <div class="poster-fallback">
+                <i class="bi bi-film"></i>
+                <span>{{ movie.title }}</span>
+            </div>
+            {% endif %}
+
+            <span class="badge-quality">4K</span>
+            {% if movie.rating %}
+            <span class="badge-rating">
+                <i class="bi bi-star-fill"></i> {{ movie.rating }}
+            </span>
+            {% endif %}
+
+            <a href="{% url 'movie_detail' movie.id %}" class="card-hover-overlay text-decoration-none">
+                <div class="card-play-btn">
+                    <i class="bi bi-play-fill"></i>
+                </div>
+            </a>
+        </div>
+
+        <div class="card-info">
+            <a href="{% url 'movie_detail' movie.id %}" class="card-title text-decoration-none" title="{{ movie.title }}">
+                {{ movie.title }}
+            </a>
+            
+            <div class="card-meta">
+                <span>{{ movie.release_year|default:'N/A' }}</span>
+                <span>&bull;</span>
+                <span>{{ movie.runtime_minutes|default:'-' }} min</span>
+                {% if movie.language %}
+                <span>&bull;</span>
+                <span class="text-uppercase">{{ movie.language }}</span>
+                {% endif %}
+            </div>
+
+            {% if movie.genres.all %}
+            <div class="card-genres">
+                {% for g in movie.genres.all|slice:":2" %}
+                <span class="genre-tag-sm">{{ g.name }}</span>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12 py-5 text-center">
+        <div class="glass-box d-inline-block p-5">
+            <i class="bi bi-camera-reels fs-1 text-danger mb-3 d-block"></i>
+            <h4 class="text-white">No Movies in {{ genre.name }}</h4>
+            <p class="text-secondary mb-4">No titles are associated with this genre yet.</p>
+            <a href="{% url 'home' %}" class="btn-cine-primary">Browse All Movies</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends 'movie/admin/admin_base.html' %}
+{% block title %}Studio Sign In &bull; CineCine Admin{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center align-items-center py-2 py-sm-5">
+    <div class="col-12 col-md-6 col-lg-4">
+        <div class="glass-box p-3 p-sm-5 shadow-lg border-secondary-subtle">
+            <div class="text-center mb-4">
+                <span class="brand-badge fs-3 p-3 d-inline-flex mb-3">
+                    <i class="bi bi-shield-lock-fill"></i>
+                </span>
+                <h2 class="fw-bold text-white mb-1">Studio Login</h2>
+                <p class="text-secondary small">Sign in to manage the CineCine streaming catalog</p>
+            </div>
+
+            {% if error %}
+            <div class="alert alert-danger border-0 bg-danger-subtle text-danger d-flex align-items-center gap-2 small mb-4" role="alert">
+                <i class="bi bi-exclamation-triangle-fill fs-5"></i>
+                <div>{{ error }}</div>
+            </div>
+            {% endif %}
+
+            <form method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="username" class="form-label-cine">Username</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-dark border-secondary text-secondary">
+                            <i class="bi bi-person"></i>
+                        </span>
+                        <input type="text" id="username" name="username" class="form-control-cine" placeholder="Enter username" required autofocus>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label for="password" class="form-label-cine">Password</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-dark border-secondary text-secondary">
+                            <i class="bi bi-key"></i>
+                        </span>
+                        <input type="password" id="password" name="password" class="form-control-cine" placeholder="Enter password" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-cine-primary w-100 justify-content-center py-2">
+                    <i class="bi bi-box-arrow-in-right fs-5"></i> Sign In to Studio
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

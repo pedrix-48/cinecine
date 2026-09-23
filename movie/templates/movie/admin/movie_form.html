@@ -1,0 +1,148 @@
+{% extends 'movie/admin/admin_base.html' %}
+{% block title %}{% if movie %}Edit {{ movie.title }}{% else %}Add New Movie{% endif %} &bull; CineCine Studio{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+    <a href="{% url 'admin_movies' %}" class="btn-cine-outline py-1 px-3 d-inline-flex align-items-center gap-2 small">
+        <i class="bi bi-arrow-left"></i>
+        <span>Back to Movie Catalog</span>
+    </a>
+</div>
+
+<div class="glass-box p-3 p-sm-4 p-lg-5">
+    <div class="d-flex align-items-center justify-content-between mb-4 pb-3 border-bottom border-secondary-subtle">
+        <div>
+            <h1 class="h3 fw-bold text-white mb-1">
+                {% if movie %}Edit: {{ movie.title }}{% else %}Add New Movie Title{% endif %}
+            </h1>
+            <p class="text-secondary small mb-0">Fill in movie metadata, poster imagery, and media links.</p>
+        </div>
+        <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-3 py-2 d-none d-sm-inline-block">
+            {% if movie %}Editing Mode{% else %}New Record{% endif %}
+        </span>
+    </div>
+
+    <form method="post" id="movieForm">
+        {% csrf_token %}
+        <div class="row g-4">
+            <!-- Left Column: Primary Details -->
+            <div class="col-lg-8">
+                <!-- Title -->
+                <div class="mb-3">
+                    <label for="title" class="form-label-cine">Movie Title <span class="text-danger">*</span></label>
+                    <input type="text" id="title" name="title" class="form-control-cine" value="{{ movie.title|default:'' }}" placeholder="e.g. Inception" required>
+                </div>
+
+                <!-- Overview -->
+                <div class="mb-3">
+                    <label for="overview" class="form-label-cine">Storyline / Overview</label>
+                    <textarea id="overview" name="overview" class="form-control-cine" rows="4" placeholder="Brief synopsis or storyline...">{{ movie.overview|default:'' }}</textarea>
+                </div>
+
+                <div class="row g-3">
+                    <!-- Release Year -->
+                    <div class="col-sm-6">
+                        <label for="release_year" class="form-label-cine">Release Year</label>
+                        <input type="number" id="release_year" name="release_year" class="form-control-cine" value="{{ movie.release_year|default:'' }}" placeholder="e.g. 2024" min="1900" max="2099">
+                    </div>
+
+                    <!-- Rating -->
+                    <div class="col-sm-6">
+                        <label for="rating" class="form-label-cine">Rating (0.0 - 10.0)</label>
+                        <input type="number" step="0.1" min="0" max="10" id="rating" name="rating" class="form-control-cine" value="{{ movie.rating|default:'' }}" placeholder="e.g. 8.8">
+                    </div>
+
+                    <!-- Runtime -->
+                    <div class="col-sm-6">
+                        <label for="runtime_minutes" class="form-label-cine">Runtime (minutes)</label>
+                        <input type="number" id="runtime_minutes" name="runtime_minutes" class="form-control-cine" value="{{ movie.runtime_minutes|default:'' }}" placeholder="e.g. 148">
+                    </div>
+
+                    <!-- Language -->
+                    <div class="col-sm-6">
+                        <label for="language" class="form-label-cine">Audio Language Code</label>
+                        <input type="text" id="language" name="language" class="form-control-cine" value="{{ movie.language|default:'' }}" placeholder="e.g. en, fr, es, ja">
+                    </div>
+                </div>
+
+                <!-- Director -->
+                <div class="mt-3">
+                    <label for="director" class="form-label-cine">Director(s)</label>
+                    <input type="text" id="director" name="director" class="form-control-cine" value="{{ movie.director|default:'' }}" placeholder="e.g. Christopher Nolan">
+                </div>
+
+                <!-- YouTube Trailer ID -->
+                <div class="mt-3">
+                    <label for="trailer_youtube_id" class="form-label-cine">
+                        YouTube Trailer ID
+                        <small class="text-secondary fw-normal ms-1">(e.g. <code>YoHD9XEInc0</code> from youtube.com/watch?v=YoHD9XEInc0)</small>
+                    </label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-dark border-secondary text-danger">
+                            <i class="bi bi-youtube"></i>
+                        </span>
+                        <input type="text" id="trailer_youtube_id" name="trailer_youtube_id" class="form-control-cine" value="{{ movie.trailer_youtube_id|default:'' }}" placeholder="Video ID only">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Poster & Genres -->
+            <div class="col-lg-4">
+                <!-- Poster URL & Live Preview -->
+                <div class="mb-3">
+                    <label for="poster_url" class="form-label-cine">Poster Image URL</label>
+                    <input type="url" id="poster_url" name="poster_url" class="form-control-cine" value="{{ movie.poster_url|default:'' }}" placeholder="https://..." oninput="updatePosterPreview(this.value)">
+                </div>
+
+                <!-- Preview Box -->
+                <div class="card bg-dark border-secondary p-2 mb-3 text-center">
+                    <small class="text-secondary d-block mb-2">Poster Preview</small>
+                    <div style="width: 100%; aspect-ratio: 2/3; background: #0b0e14; border-radius: 8px; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                        <img id="posterPreviewImg" src="{{ movie.poster_url|default:'' }}" alt="Preview" style="width: 100%; height: 100%; object-fit: cover; {% if not movie.poster_url %}display:none;{% endif %}" onerror="this.style.display='none'; document.getElementById('posterPlaceholder').style.display='block';">
+                        <div id="posterPlaceholder" class="p-3 text-secondary" style="{% if movie.poster_url %}display:none;{% endif %}">
+                            <i class="bi bi-image fs-1 opacity-50 mb-1 d-block"></i>
+                            <span class="small">Enter valid image URL above</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Genres Multi-Select -->
+                <div class="mb-3">
+                    <label for="genres" class="form-label-cine">Genres <small class="text-secondary fw-normal">(hold Ctrl/Cmd to select multiple)</small></label>
+                    <select name="genres" id="genres" multiple class="form-select-cine" style="height: 160px;">
+                        {% for genre in genres %}
+                        <option value="{{ genre.name }}" {% if movie and genre in movie.genres.all %}selected{% endif %}>
+                            {{ genre.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex flex-column flex-sm-row align-items-stretch align-items-sm-center gap-2 gap-sm-3 mt-4 pt-3 border-top border-secondary-subtle">
+            <button type="submit" class="btn-cine-primary justify-content-center">
+                <i class="bi bi-check2-circle fs-5"></i> {% if movie %}Update Movie Record{% else %}Save New Movie{% endif %}
+            </button>
+            <a href="{% url 'admin_movies' %}" class="btn-cine-outline text-center">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_script %}
+<script>
+function updatePosterPreview(url) {
+    const img = document.getElementById('posterPreviewImg');
+    const ph = document.getElementById('posterPlaceholder');
+    if (url && url.trim().length > 5) {
+        img.src = url;
+        img.style.display = 'block';
+        ph.style.display = 'none';
+    } else {
+        img.style.display = 'none';
+        ph.style.display = 'block';
+    }
+}
+</script>
+{% endblock %}

@@ -1,0 +1,77 @@
+{% extends 'movie/admin/admin_base.html' %}
+{% block title %}Genres Management &bull; CineCine Studio{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+    <div>
+        <h1 class="h3 fw-bold text-white mb-1">Genre Categories</h1>
+        <p class="text-secondary small mb-0">Manage content tags and movie categories.</p>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- Add Genre Card -->
+    <div class="col-lg-4">
+        <div class="glass-box p-4">
+            <h5 class="fw-bold text-white mb-3">
+                <i class="bi bi-plus-circle text-danger me-2"></i> Add New Genre
+            </h5>
+            <form method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="name" class="form-label-cine">Genre Name <span class="text-danger">*</span></label>
+                    <input type="text" id="name" name="name" class="form-control-cine" placeholder="e.g. Cyberpunk, Musical" required>
+                </div>
+                <button type="submit" class="btn-cine-primary w-100 justify-content-center">
+                    <i class="bi bi-tag-fill"></i> Save Genre
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Genres Table -->
+    <div class="col-lg-8">
+        <div class="admin-table-container">
+            <div class="p-3 px-4 border-bottom border-secondary-subtle d-flex justify-content-between align-items-center">
+                <span class="text-secondary small text-uppercase fw-bold">
+                    <i class="bi bi-tags text-info me-1"></i> Existing Genres ({{ genres|length }})
+                </span>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table admin-table mb-0">
+                    <thead>
+                        <tr>
+                            <th>Genre Name</th>
+                            <th class="text-end">Explore</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for genre in genres %}
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="badge-quality text-danger border-danger-subtle">TAG</span>
+                                    <span class="fw-bold text-white">{{ genre.name }}</span>
+                                </div>
+                            </td>
+                            <td class="text-end">
+                                <a href="{% url 'genre_movies' genre.name %}" target="_blank" class="btn btn-sm btn-outline-secondary py-1 px-3">
+                                    <i class="bi bi-box-arrow-up-right me-1"></i> View Movies
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="2" class="text-center py-4 text-secondary">
+                                No genres found. Add your first genre using the form on the left.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

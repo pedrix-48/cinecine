@@ -1,0 +1,181 @@
+{% extends 'movie/base.html' %}
+{% block title %}CineCine &bull; Stream Movies, Official Trailers & Reviews{% endblock %}
+
+{% block content %}
+{% if movies %}
+    {% with featured=movies.first %}
+    <!-- Hero Streaming Billboard -->
+    <section class="hero-billboard position-relative" style="background-image: url('{{ featured.poster_url }}');">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <span class="hero-badge-tag">
+                <i class="bi bi-fire"></i> Featured Spotlight
+            </span>
+            <h1 class="hero-title">{{ featured.title }}</h1>
+            
+            <div class="hero-meta">
+                {% if featured.rating %}
+                <span class="rating-chip">
+                    <i class="bi bi-star-fill text-warning"></i> {{ featured.rating }} / 10
+                </span>
+                {% endif %}
+                {% if featured.release_year %}
+                <span><i class="bi bi-calendar3 me-1"></i> {{ featured.release_year }}</span>
+                {% endif %}
+                {% if featured.runtime_minutes %}
+                <span><i class="bi bi-clock me-1"></i> {{ featured.runtime_minutes }} min</span>
+                {% endif %}
+                <span class="badge bg-secondary-subtle text-light border border-secondary-subtle px-2 py-1">4K ULTRA HD</span>
+                {% if featured.director %}
+                <span class="d-none d-md-inline"><i class="bi bi-camera-reels me-1"></i> Dir. {{ featured.director }}</span>
+                {% endif %}
+            </div>
+
+            <div class="d-flex flex-wrap gap-2 mb-3">
+                {% for genre in featured.genres.all %}
+                <a href="{% url 'genre_movies' genre.name %}" class="genre-tag-sm text-decoration-none px-2 py-1">
+                    {{ genre.name }}
+                </a>
+                {% endfor %}
+            </div>
+
+            <p class="hero-overview">
+                {{ featured.overview|default:"Immerse yourself in cinematic storytelling. Stream the official trailer, discover the complete cast, and find where to stream." }}
+            </p>
+
+            <div class="hero-actions">
+                {% if featured.trailer_youtube_id %}
+                <button type="button" class="btn-cine-primary" data-bs-toggle="modal" data-bs-target="#trailerModal{{ featured.id }}">
+                    <i class="bi bi-play-circle-fill fs-5"></i> Watch Trailer
+                </button>
+                {% endif %}
+                <a href="{% url 'movie_detail' featured.id %}" class="btn-cine-glass">
+                    <i class="bi bi-info-circle fs-5"></i> Full Details
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trailer Modal for Featured -->
+    {% if featured.trailer_youtube_id %}
+    <div class="modal fade" id="trailerModal{{ featured.id }}" tabindex="-1" aria-labelledby="trailerModalLabel{{ featured.id }}" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content modal-content-cine">
+                <div class="modal-header modal-header-cine">
+                    <h5 class="modal-title fs-5 fw-bold" id="trailerModalLabel{{ featured.id }}">
+                        <i class="bi bi-play-circle-fill text-danger me-2"></i> {{ featured.title }} - Official Trailer
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="trailer-wrapper rounded-0">
+                        <iframe src="https://www.youtube-nocookie.com/embed/{{ featured.trailer_youtube_id }}" title="{{ featured.title }} Trailer" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    {% endwith %}
+{% endif %}
+
+<!-- Genre Filter Pill Bar -->
+<div class="mb-4">
+    <div class="d-flex align-items-center justify-content-between mb-2">
+        <span class="text-secondary small text-uppercase fw-bold letter-spacing-1">
+            <i class="bi bi-sliders me-1"></i> Browse by Category
+        </span>
+    </div>
+    <div class="genre-pills-scroll">
+        <a href="{% url 'home' %}" class="genre-pill active">
+            <i class="bi bi-collection-play-fill text-danger"></i> All Titles
+        </a>
+        {% for genre in genres %}
+        <a href="{% url 'genre_movies' genre.name %}" class="genre-pill">
+            {{ genre.name }}
+        </a>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Movies Section Header -->
+<div class="cine-section-header">
+    <h2 class="cine-section-title">
+        <span>Trending & Popular Titles</span>
+    </h2>
+    <span class="badge bg-dark border border-secondary text-secondary rounded-pill px-3 py-2">
+        {{ movies|length }} Titles Available
+    </span>
+</div>
+
+<!-- Movie Grid -->
+<div class="movie-grid">
+    {% for movie in movies %}
+    <div class="movie-card">
+        <div class="poster-wrapper">
+            {% if movie.poster_url %}
+            <img src="{{ movie.poster_url }}" alt="{{ movie.title }}" class="poster-img" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="poster-fallback" style="display: none;">
+                <i class="bi bi-film"></i>
+                <span>{{ movie.title }}</span>
+            </div>
+            {% else %}
+            <div class="poster-fallback">
+                <i class="bi bi-film"></i>
+                <span>{{ movie.title }}</span>
+            </div>
+            {% endif %}
+
+            <!-- Top Quality & Rating Badges -->
+            <span class="badge-quality">4K</span>
+            {% if movie.rating %}
+            <span class="badge-rating">
+                <i class="bi bi-star-fill"></i> {{ movie.rating }}
+            </span>
+            {% endif %}
+
+            <!-- Hover Play Overlay -->
+            <a href="{% url 'movie_detail' movie.id %}" class="card-hover-overlay text-decoration-none">
+                <div class="card-play-btn">
+                    <i class="bi bi-play-fill"></i>
+                </div>
+            </a>
+        </div>
+
+        <!-- Card Meta Info -->
+        <div class="card-info">
+            <a href="{% url 'movie_detail' movie.id %}" class="card-title text-decoration-none" title="{{ movie.title }}">
+                {{ movie.title }}
+            </a>
+            
+            <div class="card-meta">
+                <span>{{ movie.release_year|default:'N/A' }}</span>
+                <span>&bull;</span>
+                <span>{{ movie.runtime_minutes|default:'-' }} min</span>
+                {% if movie.language %}
+                <span>&bull;</span>
+                <span class="text-uppercase">{{ movie.language }}</span>
+                {% endif %}
+            </div>
+
+            {% if movie.genres.all %}
+            <div class="card-genres">
+                {% for genre in movie.genres.all|slice:":2" %}
+                <span class="genre-tag-sm">{{ genre.name }}</span>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12 py-5 text-center">
+        <div class="glass-box d-inline-block p-5">
+            <i class="bi bi-film fs-1 text-danger mb-3 d-block"></i>
+            <h4 class="text-white">No Movies Found</h4>
+            <p class="text-secondary mb-4">Start by adding movies through the Admin Studio or run the seed command.</p>
+            <a href="{% url 'admin_movies' %}" class="btn-cine-primary">Go to Studio</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

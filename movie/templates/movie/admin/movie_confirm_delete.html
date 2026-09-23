@@ -1,0 +1,40 @@
+{% extends 'movie/admin/admin_base.html' %}
+{% block title %}Delete Movie &bull; CineCine Studio{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center py-5">
+    <div class="col-md-6 col-lg-5">
+        <div class="glass-box p-4 p-md-5 text-center border-danger-subtle shadow-lg">
+            <div class="stat-icon bg-danger-subtle text-danger border border-danger-subtle mx-auto mb-3" style="width: 64px; height: 64px; font-size: 2rem;">
+                <i class="bi bi-trash-fill"></i>
+            </div>
+
+            <h3 class="fw-bold text-white mb-2">Delete Movie?</h3>
+            <p class="text-secondary mb-4">
+                Are you sure you want to permanently remove <strong class="text-white">"{{ movie.title }}"</strong> from the CineCine streaming catalog?
+            </p>
+
+            {% if movie.poster_url %}
+            <div class="mx-auto mb-4" style="width: 90px; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.5);">
+                <img src="{{ movie.poster_url }}" alt="{{ movie.title }}" style="width: 100%; height: auto; display: block;">
+            </div>
+            {% endif %}
+
+            <div class="alert alert-warning border-0 bg-warning-subtle text-warning small text-start mb-4">
+                <i class="bi bi-exclamation-triangle-fill me-1"></i>
+                This action is irreversible and will also delete associated cast assignments and watch links.
+            </div>
+
+            <form method="post" class="d-flex justify-content-center gap-3">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger px-4 py-2 fw-semibold">
+                    <i class="bi bi-trash3-fill me-1"></i> Yes, Delete Movie
+                </button>
+                <a href="{% url 'admin_movies' %}" class="btn-cine-outline px-4 py-2">
+                    Cancel
+                </a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,125 @@
+{% extends 'movie/admin/admin_base.html' %}
+{% block title %}Dashboard &bull; CineCine Studio{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+    <div>
+        <h1 class="h3 fw-bold text-white mb-1">Studio Overview</h1>
+        <p class="text-secondary small mb-0">Platform metrics, recent additions, and catalog summary.</p>
+    </div>
+    <div class="d-flex gap-2">
+        <a href="{% url 'admin_add_movie' %}" class="btn-cine-primary">
+            <i class="bi bi-plus-circle-fill"></i> Add New Movie
+        </a>
+    </div>
+</div>
+
+<!-- Stats Row -->
+<div class="row g-3 g-md-4 mb-4">
+    <div class="col-12 col-sm-6 col-md-4">
+        <div class="admin-stat-card">
+            <div>
+                <span class="text-secondary small text-uppercase fw-bold">Total Movies</span>
+                <h2 class="display-6 fw-bold text-white mb-0 mt-1">{{ total_movies }}</h2>
+                <small class="text-success"><i class="bi bi-arrow-up-right me-1"></i>Active in Catalog</small>
+            </div>
+            <div class="stat-icon bg-danger-subtle text-danger border border-danger-subtle">
+                <i class="bi bi-film"></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-sm-6 col-md-4">
+        <div class="admin-stat-card">
+            <div>
+                <span class="text-secondary small text-uppercase fw-bold">Genres Configured</span>
+                <h2 class="display-6 fw-bold text-white mb-0 mt-1">{{ total_genres }}</h2>
+                <small class="text-info"><i class="bi bi-tags me-1"></i>Categories Available</small>
+            </div>
+            <div class="stat-icon bg-info-subtle text-info border border-info-subtle">
+                <i class="bi bi-tags-fill"></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-sm-6 col-md-4">
+        <div class="admin-stat-card">
+            <div>
+                <span class="text-secondary small text-uppercase fw-bold">Audience Reviews</span>
+                <h2 class="display-6 fw-bold text-white mb-0 mt-1">{{ total_reviews }}</h2>
+                <small class="text-warning"><i class="bi bi-star-half me-1"></i>Community Feedback</small>
+            </div>
+            <div class="stat-icon bg-warning-subtle text-warning border border-warning-subtle">
+                <i class="bi bi-chat-heart-fill"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Movies Table -->
+<div class="admin-table-container">
+    <div class="p-3 px-4 border-bottom border-secondary-subtle d-flex justify-content-between align-items-center">
+        <h5 class="fw-bold text-white mb-0 fs-6 fs-sm-5">
+            <i class="bi bi-clock-history text-danger me-2"></i> Recently Added Movies
+        </h5>
+        <a href="{% url 'admin_movies' %}" class="small text-secondary text-decoration-none">
+            View All <i class="bi bi-arrow-right ms-1"></i>
+        </a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table admin-table mb-0">
+            <thead>
+                <tr>
+                    <th>Movie Title</th>
+                    <th class="d-none d-sm-table-cell">Year</th>
+                    <th>Rating</th>
+                    <th class="d-none d-md-table-cell">Added Date</th>
+                    <th class="text-end">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for movie in recent_movies %}
+                <tr>
+                    <td>
+                        <div class="d-flex align-items-center gap-2 gap-sm-3">
+                            {% if movie.poster_url %}
+                            <img src="{{ movie.poster_url }}" alt="{{ movie.title }}" style="width: 34px; height: 48px; object-fit: cover; border-radius: 4px;" onerror="this.style.display='none'">
+                            {% endif %}
+                            <div>
+                                <span class="fw-bold text-white d-block text-truncate" style="max-width: 180px;">{{ movie.title }}</span>
+                                <small class="text-muted d-block">
+                                    <span class="d-sm-none text-secondary">{{ movie.release_year|default:'-' }} &bull; </span>
+                                    {% if movie.director %}{{ movie.director|truncatechars:20 }}{% else %}Movie{% endif %}
+                                </small>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="d-none d-sm-table-cell">{{ movie.release_year|default:'N/A' }}</td>
+                    <td>
+                        {% if movie.rating %}
+                        <span class="badge bg-warning-subtle text-warning border border-warning-subtle">
+                            <i class="bi bi-star-fill me-1"></i> {{ movie.rating }}
+                        </span>
+                        {% else %}
+                        <span class="text-muted">-</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-secondary small d-none d-md-table-cell">{{ movie.created_at|date:"M d, Y" }}</td>
+                    <td class="text-end">
+                        <a href="{% url 'admin_edit_movie' movie.id %}" class="btn btn-sm btn-outline-light py-1 px-2" title="Edit Movie">
+                            <i class="bi bi-pencil-fill"></i> <span class="d-none d-sm-inline">Edit</span>
+                        </a>
+                    </td>
+                </tr>
+
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center py-4 text-secondary">
+                        No movies found in the database.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
